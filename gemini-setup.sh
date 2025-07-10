@@ -99,7 +99,7 @@ Plan this feature or project using Gemini with complete project context.
 
 What do you want to plan or build?
 
-!/gemini-cli:analyze @package.json @*/README.md @src/* "Help plan this feature/project: {input}. ${cli_context}Consider: 1) Existing project architecture and dependencies 2) Best technologies for this tech stack 3) Implementation steps and timeline 4) Potential integration issues 5) Security and performance implications. Provide comprehensive but actionable guidance."
+!/gemini-cli:analyze @package.json @*/README.md @src/* "Help plan this feature/project: {input}. ${cli_context}Consider: 1) Existing project architecture and dependencies 2) Best technologies for this tech stack 3) Implementation steps and timeline 4) Potential integration issues 5) Security and performance implications. Provide comprehensive but actionable guidance." model:"gemini-2.5-pro"
 EOF
     print_success "Created /gemini-plan command (MCP-enhanced)"
     
@@ -113,7 +113,7 @@ Get expert best practice advice from Gemini with project awareness.
 
 What approach question do you have?
 
-!/gemini-cli:analyze @package.json @{selectedText} "{input} ${cli_context}Context: Based on the project's tech stack and selected code, recommend: 1) Best practices specific to this technology 2) Pros/cons of different approaches 3) Implementation strategy with examples 4) Common pitfalls to avoid 5) Performance and security considerations."
+!/gemini-cli:analyze @package.json @{selectedText} "{input} ${cli_context}Context: Based on the project's tech stack and selected code, recommend: 1) Best practices specific to this technology 2) Pros/cons of different approaches 3) Implementation strategy with examples 4) Common pitfalls to avoid 5) Performance and security considerations." model:"gemini-2.5-pro"
 EOF
     print_success "Created /gemini-approach command (MCP-enhanced)"
     
@@ -177,7 +177,7 @@ description: Security audit with complete project context
 
 Perform comprehensive security audit with full project awareness.
 
-!/gemini-cli:analyze @{currentFile} @package.json @*.config.* "Security audit with project context. ${cli_context}Analyze for: 1) Input validation and sanitization issues 2) Authentication and authorization flaws 3) Data exposure and privacy risks 4) Dependency vulnerabilities and outdated packages 5) Configuration and environment security. List only HIGH/CRITICAL issues with specific, actionable fixes and code examples."
+!/gemini-cli:analyze @{currentFile} @package.json @*.config.* "Security audit with project context. ${cli_context}Analyze for: 1) Input validation and sanitization issues 2) Authentication and authorization flaws 3) Data exposure and privacy risks 4) Dependency vulnerabilities and outdated packages 5) Configuration and environment security. List only HIGH/CRITICAL issues with specific, actionable fixes and code examples." model:"gemini-2.5-pro"
 EOF
     print_success "Created /gemini-security command (MCP-enhanced)"
     
@@ -215,7 +215,7 @@ description: Comprehensive project-wide security audit
 
 Perform complete project security audit across all files and configurations.
 
-!/gemini-cli:analyze @src/* @package.json @*.config.* @.env.example "Comprehensive project-wide security audit. ${cli_context}Analyze entire project for: 1) Source code vulnerabilities across all files 2) Dependency security issues and outdated packages 3) Configuration security (CORS, headers, environment) 4) Secrets management and exposure risks 5) API security patterns and authentication. Prioritize HIGH/CRITICAL issues with remediation steps."
+!/gemini-cli:analyze @src/* @package.json @*.config.* @.env.example "Comprehensive project-wide security audit. ${cli_context}Analyze entire project for: 1) Source code vulnerabilities across all files 2) Dependency security issues and outdated packages 3) Configuration security (CORS, headers, environment) 4) Secrets management and exposure risks 5) API security patterns and authentication. Prioritize HIGH/CRITICAL issues with remediation steps." model:"gemini-2.5-pro"
 EOF
     print_success "Created /gemini-audit command (NEW)"
     
@@ -227,7 +227,7 @@ description: Project-wide performance optimization analysis
 
 Analyze entire project for performance optimization opportunities.
 
-!/gemini-cli:analyze @src/* @package.json "Project performance optimization analysis. ${cli_context}Focus on: 1) Code efficiency bottlenecks and algorithmic improvements 2) Database query optimization opportunities 3) Memory usage patterns and potential leaks 4) Bundle size optimization and code splitting 5) Async/await patterns and concurrency improvements. Provide specific, measurable recommendations with implementation examples."
+!/gemini-cli:analyze @src/* @package.json "Project performance optimization analysis. ${cli_context}Focus on: 1) Code efficiency bottlenecks and algorithmic improvements 2) Database query optimization opportunities 3) Memory usage patterns and potential leaks 4) Bundle size optimization and code splitting 5) Async/await patterns and concurrency improvements. Provide specific, measurable recommendations with implementation examples." model:"gemini-2.5-pro"
 EOF
     print_success "Created /gemini-optimize command (NEW)"
     
@@ -239,7 +239,7 @@ description: Get intelligent refactoring suggestions with architectural awarenes
 
 Get smart refactoring suggestions that consider your entire project architecture.
 
-!/gemini-cli:analyze @{currentFile} @src/* "Intelligent refactoring analysis for this code within project architecture context. ${cli_context}Suggest: 1) Design pattern improvements and SOLID principles application 2) Code organization and structure enhancements 3) Dependency reduction and coupling improvements 4) Performance optimizations and efficiency gains 5) Maintainability and readability improvements. Provide before/after examples."
+!/gemini-cli:analyze @{currentFile} @src/* "Intelligent refactoring analysis for this code within project architecture context. ${cli_context}Suggest: 1) Design pattern improvements and SOLID principles application 2) Code organization and structure enhancements 3) Dependency reduction and coupling improvements 4) Performance optimizations and efficiency gains 5) Maintainability and readability improvements. Provide before/after examples." model:"gemini-2.5-pro"
 EOF
     print_success "Created /gemini-refactor command (NEW)"
     
@@ -293,7 +293,7 @@ Get Gemini's approval on your implementation plan before making major changes.
 
 What's your implementation plan?
 
-!/gemini-cli:analyze @{currentFile} @package.json "Review this implementation plan: {input}. ${cli_context}Evaluate: 1) Will this approach solve the problem effectively? 2) Are there better alternatives? 3) What edge cases should be considered? 4) Any risks or dependencies to watch for? Give a clear GO/NO-GO recommendation with reasoning."
+!/gemini-cli:analyze @{currentFile} @package.json "Review this implementation plan: {input}. ${cli_context}Evaluate: 1) Will this approach solve the problem effectively? 2) Are there better alternatives? 3) What edge cases should be considered? 4) Any risks or dependencies to watch for? Give a clear GO/NO-GO recommendation with reasoning." model:"gemini-2.5-pro"
 EOF
     print_success "Created /gemini-proceed command (RESPONSE HANDLER)"
     
@@ -599,6 +599,7 @@ main() {
     echo -e "${NC}"
     
     echo "This setup creates 20 intelligent slash commands with:"
+    echo "• Smart model selection (flash for speed, pro for depth)"
     echo "• Project-aware AI analysis using @filename syntax"
     echo "• Context-smart code generation and review"  
     echo "• Project-wide security audits and optimization"
@@ -606,16 +607,16 @@ main() {
     echo ""
     echo "Prerequisites (install these first):"
     echo "• Update Gemini CLI: npm install -g @google/gemini-cli"
-    echo "• Check model version: gemini (should show gemini-2.5-pro)"
+    echo "• Verify installation: gemini --version"
     echo "• Authenticate with personal Gmail: gemini auth"
     echo "• Install MCP server: claude mcp add gemini-cli -s user -- npx -y gemini-mcp-tool"
     echo ""
     echo "What you get:"
-    echo "• 8 enhanced core commands with project context"
-    echo "• 4 advanced analysis commands (test, audit, optimize, refactor)"
+    echo "• 8 core commands using flash model (fast, no rate limits)"
+    echo "• 7 advanced commands using pro model (deep analysis)"
     echo "• 4 response handler commands (implement, verify, iterate, proceed)"
     echo "• 4 workflow commands (fix-cycle, build-cycle, secure-cycle, optimize-cycle)"
-    echo "• File-aware analysis with automatic context inclusion"
+    echo "• Smart model selection to avoid rate limits"
     echo "• Complete development workflows with Gemini collaboration"
     echo ""
     
@@ -638,16 +639,16 @@ main() {
     echo ""
     echo -e "${GREEN}Next steps:${NC}"
     echo "1. Update Gemini CLI: npm install -g @google/gemini-cli"
-    echo "2. Check model: gemini (should show gemini-2.5-pro)"
+    echo "2. Verify working: gemini --version"
     echo "3. Authenticate with personal Gmail: gemini auth"
     echo "4. Install MCP server: claude mcp add gemini-cli -s user -- npx -y gemini-mcp-tool"
     echo "5. Copy activation prompt from: $PROMPTS_FILE into Claude Code"
-    echo "6. Start coding with project-aware AI assistance!"
+    echo "6. Start coding with smart model selection!"
     echo ""
     echo -e "${BLUE}Try these enhanced commands:${NC}"
-    echo "• /gemini-plan for project-aware planning"
-    echo "• /gemini-audit for project-wide security analysis"
-    echo "• /gemini-optimize for performance optimization"
+    echo "• /gemini-review (uses flash - fast, no limits)"
+    echo "• /gemini-plan (uses pro - deep analysis)"
+    echo "• /gemini-build-cycle (smart model switching)"
     echo ""
     read -p "Press Enter to finish..."
 }

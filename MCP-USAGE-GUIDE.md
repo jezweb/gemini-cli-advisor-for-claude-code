@@ -7,8 +7,8 @@
 # Keep Gemini updated
 npm install -g @google/gemini-cli
 
-# Check model (should show gemini-2.5-pro)
-gemini
+# Verify installation
+gemini --version
 
 # Authenticate with personal Gmail
 gemini auth
@@ -19,6 +19,13 @@ claude mcp add gemini-cli -s user -- npx -y gemini-mcp-tool
 # Run setup for 20 commands
 ./gemini-setup.sh
 ```
+
+### ⚡ Automatic Model Selection
+Commands automatically use the optimal model:
+- **gemini-2.5-flash** (default): Most commands, avoids rate limits
+- **gemini-2.5-pro**: Complex analysis only (may hit rate limits)
+
+No manual configuration needed!
 
 ### 2. Choose Your Activation Method
 
@@ -600,6 +607,14 @@ Or use direct commands: "Use gemini to analyze this file"
 
 ## 🆘 Troubleshooting
 
+### Rate Limit Errors (429)
+- **Most commands use flash** to avoid this issue
+- **Complex commands (plan, audit, etc.) use pro** and may hit limits
+- **Solutions:**
+  - Wait 5-10 minutes for rate limit reset
+  - Manually switch to flash: `gemini -m gemini-2.5-flash`
+  - Use simpler commands during high usage
+
 ### Commands Not Appearing
 - Restart Claude Code after setup
 - Verify MCP server: `claude mcp list` should show `gemini-cli`
@@ -607,6 +622,7 @@ Or use direct commands: "Use gemini to analyze this file"
 ### Authentication Issues
 - Re-authenticate: `gemini auth`
 - Check MCP server status: `claude mcp get gemini-cli`
+- Must use personal Gmail (workspace accounts don't work)
 
 ### File Analysis Errors
 - MCP handles missing files gracefully
@@ -616,7 +632,7 @@ Or use direct commands: "Use gemini to analyze this file"
 ### Performance Issues
 - Large projects may take longer to analyze
 - Use specific file selection for faster results
-- Consider using targeted commands instead of project-wide ones
+- Flash model is faster than pro for most tasks
 
 ---
 

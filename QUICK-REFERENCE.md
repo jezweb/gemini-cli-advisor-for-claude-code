@@ -6,11 +6,12 @@
 # 1. Keep Gemini CLI updated (do regularly)
 npm install -g @google/gemini-cli
 
-# 2. Check model version (should show gemini-2.5-pro)
-gemini
+# 2. Check Gemini is working
+gemini --version
 
-# 3. Set model if needed
-gemini -m gemini-2.5-pro
+# 3. Model info (commands auto-select optimal model)
+# Default: gemini-2.5-flash (avoids rate limits)
+# Complex tasks: gemini-2.5-pro (may hit limits)
 
 # 4. Authenticate (personal Gmail only, not workspace)
 gemini auth
@@ -34,21 +35,25 @@ claude mcp add gemini-cli -s user -- npx -y gemini-mcp-tool
 
 ## ⚡ Custom Slash Commands (20 total after setup)
 
-### Core Commands (8)
-- `/gemini-plan` - Project-aware architecture planning
-- `/gemini-approach` - Best practice advice with context
-- `/gemini-function` - Generate functions matching your style
+### Core Commands (8) 
+✨ **Using Flash (Fast, No Rate Limits)**
 - `/gemini-review` - Code review with project context
 - `/gemini-explain` - Explain code with dependencies context
 - `/gemini-fix` - Debug with full project awareness
-- `/gemini-security` - Security audit with configs
-- `/gemini-ask` - Context-aware questions
-
-### Advanced Commands (4)
+- `/gemini-function` - Generate functions matching your style
 - `/gemini-test` - Generate comprehensive tests
+- `/gemini-ask` - Context-aware questions
+- `/gemini-implement` - Implement suggestions
+- `/gemini-verify` - Verify changes
+
+🧠 **Using Pro (Deep Analysis, Watch Rate Limits)**
+- `/gemini-plan` - Project-aware architecture planning
+- `/gemini-approach` - Best practice advice with context
+- `/gemini-security` - Security audit with configs
 - `/gemini-audit` - Project-wide security audit
 - `/gemini-optimize` - Performance analysis
 - `/gemini-refactor` - Architectural improvements
+- `/gemini-proceed` - Validate major decisions
 
 ### Response Handlers (4)
 - `/gemini-implement` - Implement Gemini's suggestions
@@ -75,13 +80,13 @@ gemini --help
 # Restart Claude Code
 ```
 
-**Wrong model version?**
+**Rate limit (429 error)?**
 ```bash
-# Update CLI
-npm install -g @google/gemini-cli
-
-# Set model explicitly
-gemini -m gemini-2.5-pro
+# Commands auto-use flash to avoid this
+# If you hit limits on pro commands:
+# 1. Wait a bit for rate limit reset
+# 2. Or manually switch to flash:
+gemini -m gemini-2.5-flash
 ```
 
 **Workspace account issues?**

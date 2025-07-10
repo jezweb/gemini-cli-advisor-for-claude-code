@@ -28,10 +28,8 @@ cd gemini-cli-advisor-for-claude-code
 # 1. Install/Update Gemini CLI (do this regularly)
 npm install -g @google/gemini-cli
 
-# 2. Verify model (should show gemini-2.5-pro)
-gemini
-# If not on gemini-2.5-pro, set it:
-# gemini -m gemini-2.5-pro
+# 2. Verify Gemini is working
+gemini --version
 
 # 3. Authenticate with personal Gmail (not workspace)
 gemini auth
@@ -39,6 +37,16 @@ gemini auth
 # 4. Install Gemini MCP Server
 claude mcp add gemini-cli -s user -- npx -y gemini-mcp-tool
 ```
+
+### 🎯 Model Selection Strategy
+
+**Smart Model Assignment:**
+- **gemini-2.5-flash** (Default) - Used for most commands to avoid rate limits
+- **gemini-2.5-pro** - Reserved for complex analysis tasks
+
+Commands automatically use the optimal model:
+- ✨ **Flash**: review, explain, fix, test, implement, verify (high-frequency tasks)
+- 🧠 **Pro**: plan, audit, security, optimize, refactor, approach (deep analysis)
 
 ## 🎯 What This Does
 
@@ -210,9 +218,10 @@ This creates a true AI pair programming experience where Gemini actively partici
 - Verify MCP server: `claude mcp list` should show `gemini-cli`
 - Re-install if needed: `claude mcp add gemini-cli -s user -- npx -y gemini-mcp-tool`
 
-**Model Issues:**
-- **Old model stuck?** Run `npm install -g @google/gemini-cli` to update
-- **Wrong model?** Set explicitly: `gemini -m gemini-2.5-pro`
+**Model & Rate Limit Issues:**
+- **Rate limit (429 error)?** Commands automatically use flash for most tasks
+- **Need different model?** Set manually: `gemini -m gemini-2.5-flash`
+- **Complex task failing?** May need pro model - wait for rate limit reset
 - **Workspace account?** Use personal Gmail instead
 
 **Integration Tips:**
