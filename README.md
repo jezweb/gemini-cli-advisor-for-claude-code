@@ -9,11 +9,17 @@ Transform Claude Code into a next-generation AI development environment using Ge
 # Install globally
 npm install -g gemini-mcp-advisor
 
-# Run setup
+# Run setup to create 20 slash commands
 gemini-mcp-setup
 ```
 
-### Option 2: Clone and Run Locally
+### Option 2: Use npx (No Installation)
+```bash
+# Run directly without installing
+npx gemini-mcp-advisor
+```
+
+### Option 3: Clone and Run Locally
 ```bash
 # Clone repository
 git clone https://github.com/jezweb/gemini-cli-advisor-for-claude-code.git
