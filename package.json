@@ -4,8 +4,8 @@
   "description": "Transform Claude Code into a next-generation AI development environment with Gemini MCP integration. Provides 20 intelligent commands for complete development workflows.",
   "main": "gemini-setup.sh",
   "bin": {
-    "gemini-mcp-setup": "./bin/gemini-mcp-setup",
-    "gemini-mcp-advisor": "./bin/gemini-mcp-setup"
+    "gemini-mcp-setup": "bin/gemini-mcp-setup",
+    "gemini-mcp-advisor": "bin/gemini-mcp-setup"
   },
   "scripts": {
     "postinstall": "echo '\n✨ Gemini MCP Advisor installed! Run \"gemini-mcp-setup\" to create your AI development workflow.\n'"
@@ -53,3 +53,4 @@
     "setup-complete.md"
   ]
 }
+
