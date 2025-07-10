@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Gemini Auth Helper - npm executable wrapper
+# This script is installed globally via npm and runs the auth helper
+
+# Get the directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PACKAGE_DIR="$(dirname "$SCRIPT_DIR")"
+
+# Check if running from npm global install or local
+if [[ "$SCRIPT_DIR" == *"/node_modules/.bin"* ]]; then
+    # Running from npm install - find the actual package location
+    PACKAGE_DIR="$(cd "$SCRIPT_DIR/../gemini-mcp-advisor" && pwd 2>/dev/null)"
+    if [ ! -d "$PACKAGE_DIR" ]; then
+        # Try alternative npm global location
+        PACKAGE_DIR="$(cd "$SCRIPT_DIR/../../lib/node_modules/gemini-mcp-advisor" && pwd 2>/dev/null)"
+    fi
+fi
+
+# Check if auth helper script exists
+if [ ! -f "$PACKAGE_DIR/gemini-auth-helper.sh" ]; then
+    echo "Error: Could not find gemini-auth-helper.sh in $PACKAGE_DIR"
+    echo "Please ensure the package was installed correctly."
+    exit 1
+fi
+
+# Run the actual auth helper script
+exec bash "$PACKAGE_DIR/gemini-auth-helper.sh" "$@"

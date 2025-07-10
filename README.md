@@ -37,8 +37,16 @@ npm install -g @google/gemini-cli
 # 2. Verify Gemini is working
 gemini --version
 
-# 3. Authenticate with personal Gmail (not workspace)
+# 3. Authenticate Gemini CLI (choose one method)
+
+## Option A: API Key (Recommended for reliability)
+# Get free API key from https://aistudio.google.com/apikey
+export GOOGLE_API_KEY="your-api-key-here"
+# 100 requests/day, no browser needed, never expires
+
+## Option B: OAuth (Higher limits)
 gemini auth
+# 1,000 requests/day, requires browser, may need re-auth
 
 # 4. Install Gemini MCP Server (https://github.com/jamubc/gemini-mcp-tool)
 claude mcp add gemini-cli -s user -- npx -y gemini-mcp-tool
@@ -211,13 +219,61 @@ This creates a true AI pair programming experience where Gemini actively partici
 # Automatically: plans → implements → tests → reviews → iterates
 ```
 
+## 🔐 Authentication Guide
+
+### Solving the OAuth Re-authentication Problem
+
+Many users experience repeated OAuth prompts. Here are two solutions:
+
+#### Solution 1: API Key Authentication (Recommended)
+```bash
+# 1. Get your free API key
+# Visit: https://aistudio.google.com/apikey
+
+# 2. Set the API key (choose one method):
+
+# Temporary (this session only)
+export GOOGLE_API_KEY="your-api-key-here"
+
+# Permanent (add to ~/.bashrc or ~/.zshrc)
+echo 'export GOOGLE_API_KEY="your-api-key"' >> ~/.bashrc
+source ~/.bashrc
+
+# Project-specific (.env file)
+echo "GOOGLE_API_KEY=your-api-key" > .env
+```
+
+**API Key Benefits:**
+- ✅ No browser popups
+- ✅ Never expires
+- ✅ Works in SSH/remote sessions
+- ✅ 100 requests/day (sufficient for most development)
+
+#### Solution 2: Use Our Authentication Helper
+```bash
+# Run after installing the package
+./gemini-auth-helper.sh
+```
+
+This interactive script helps you:
+- Choose between API key and OAuth
+- Set up persistent authentication
+- Test your configuration
+- Troubleshoot common issues
+
+### Authentication Comparison
+
+| Method | Daily Limit | Setup | Best For |
+|--------|------------|-------|----------|
+| API Key | 100 requests | No browser needed | Reliability, CI/CD |
+| OAuth | 1,000 requests | Requires browser | High-volume development |
+
 ## 🆘 Troubleshooting
 
 **Setup Issues:**
 - Ensure Node.js is installed  
 - Update Gemini CLI: `npm install -g @google/gemini-cli`
-- Use personal Gmail (not workspace): `gemini auth`
-- Check model version: `gemini` should show gemini-2.5-pro
+- Check model version: `gemini --version`
 
 **Commands Not Showing:**
 - Restart Claude Code after setup
