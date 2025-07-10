@@ -1,7 +1,7 @@
 {
   "name": "gemini-mcp-advisor",
   "version": "1.4.0",
-  "description": "Transform Claude Code into a next-generation AI development environment with Gemini MCP integration. Provides 20 intelligent commands for complete development workflows.",
+  "description": "Transform Claude Code into a next-generation AI development environment with dual Gemini integration. Choose MCP Server (advanced) or Direct CLI (simple) approaches. Provides 20+ intelligent commands for complete development workflows.",
   "main": "gemini-setup.sh",
   "bin": {
     "gemini-mcp-setup": "bin/gemini-mcp-setup",
@@ -24,7 +24,11 @@
     "anthropic",
     "model-context-protocol",
     "ai-advisor",
-    "coding-assistant"
+    "coding-assistant",
+    "dual-integration",
+    "bash-integration",
+    "direct-cli",
+    "hybrid-setup"
   ],
   "author": "Jeremy Dawes <jez@jezweb.com.au>",
   "license": "MIT",
