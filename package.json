@@ -1,6 +1,6 @@
 {
   "name": "gemini-mcp-advisor",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Transform Claude Code into a next-generation AI development environment with Gemini MCP integration. Provides 20 intelligent commands for complete development workflows.",
   "main": "gemini-setup.sh",
   "bin": {
