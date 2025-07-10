@@ -40,7 +40,7 @@ gemini --version
 # 3. Authenticate with personal Gmail (not workspace)
 gemini auth
 
-# 4. Install Gemini MCP Server
+# 4. Install Gemini MCP Server (https://github.com/jamubc/gemini-mcp-tool)
 claude mcp add gemini-cli -s user -- npx -y gemini-mcp-tool
 ```
 
@@ -259,6 +259,12 @@ gemini-mcp-setup
 
 - **[Quick Reference](QUICK-REFERENCE.md)** - Fast setup and command cheat sheet
 - **[MCP Usage Guide](MCP-USAGE-GUIDE.md)** - Comprehensive command reference and examples
+
+## 🔗 Links
+
+- **[NPM Package](https://www.npmjs.com/package/gemini-mcp-advisor)** - Install with `npm install -g gemini-mcp-advisor`
+- **[Gemini MCP Server](https://github.com/jamubc/gemini-mcp-tool)** - The MCP server that powers this integration
+- **[Jezweb](https://www.jezweb.com.au)** - Created by Jeremy Dawes, CEO of Jezweb
 
 ---
 
