@@ -1,0 +1,19 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Generated files
+claude-quick-start.txt
+setup-complete.md
+
+# OS
+.DS_Store
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Temp
+*.tmp
+*.temp

@@ -1,0 +1,19 @@
+# Archive and development files
+archive/
+test-commands/
+
+# Generated files that users create locally
+claude-quick-start.txt
+setup-complete.md
+
+# Git files
+.git/
+.gitignore
+
+# Development files
+*.log
+.DS_Store
+node_modules/
+
+# Keep only essential files for npm package
+# Users get: README, setup script, bin wrapper, docs

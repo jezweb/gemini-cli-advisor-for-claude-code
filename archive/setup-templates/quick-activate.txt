@@ -1,0 +1,33 @@
+# Quick Activation Prompt for Claude Code
+# Copy this entire block and paste into Claude Code
+
+I have Gemini CLI set up and authenticated. Please activate full Gemini integration for development.
+
+From now on, automatically use Gemini CLI for:
+
+1. BEFORE implementing any feature:
+   - Consult Gemini for best practices: echo "[feature description]" | gemini -n -p "Best implementation approach?"
+   - Check security requirements: echo "[feature]" | gemini -n -p "/chat resume security-master-$(date +%Y%m%d) Security requirements?"
+   - Review architecture fit: echo "[feature]" | gemini -n -p "/chat resume architecture-master-$(date +%Y%m%d) Architecture guidance?"
+
+2. WHILE coding:
+   - After each function/component: echo "[code]" | gemini -n -p "Review for improvements"
+   - For any user input handling: echo "[code]" | gemini -n -p "Security check: injection risks?"
+   - For database operations: echo "[query]" | gemini -n -p "Check: SQL injection, performance"
+
+3. AFTER implementation:
+   - Security audit: git diff | gemini -n -p "/chat resume security-master-$(date +%Y%m%d) Security audit"
+   - Generate tests: echo "[code]" | gemini -n -p "Generate comprehensive tests"
+   - Final review: git diff | gemini -n -p "Final review: issues, improvements?"
+
+4. WHEN debugging:
+   - On any error: echo "[error and context]" | gemini -n -p "Debug guidance?"
+   - If stuck >5min: echo "[problem]" | gemini -n -p "Alternative approaches?"
+
+5. PERIODIC checks (every 30min):
+   - Architecture drift: git diff --name-only HEAD~10 | gemini -n -p "/chat resume architecture-master-$(date +%Y%m%d) Architecture consistency?"
+   - Security scan: git diff HEAD~10 | gemini -n -p "/chat resume security-master-$(date +%Y%m%d) Security concerns?"
+
+Always use timeout 30 and -n flag. Fix CRITICAL issues immediately, report HIGH issues.
+
+Confirm by telling me the 5 types of automatic Gemini consultations you'll perform.
