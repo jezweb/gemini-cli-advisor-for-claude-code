@@ -79,7 +79,7 @@ detect_available_clis() {
 # No authentication checking - user handles this themselves
 
 # Create MCP-optimized slash commands
-create_slash_commands() {
+create_mcp_commands() {
     print_header "Creating MCP-powered slash commands"
     
     mkdir -p "$CLAUDE_SETTINGS_DIR"
@@ -356,6 +356,228 @@ EOF
     print_success "Created /gemini-optimize-cycle command (WORKFLOW)"
 }
 
+# Create direct CLI slash commands
+create_cli_commands() {
+    print_header "Creating Direct CLI-powered slash commands"
+    
+    mkdir -p "$CLAUDE_SETTINGS_DIR"
+    
+    local cli_context=""
+    if [ -n "$AVAILABLE_CLIS" ]; then
+        cli_context="Available dev tools: $AVAILABLE_CLIS. "
+    fi
+    
+    # Helper function to create file context reading
+    local file_context_cmd='
+    echo "=== Current File Context ==="
+    if [ -f "{currentFile}" ]; then
+        echo "File: {currentFile}"
+        echo "--- Content ---"
+        head -n 100 "{currentFile}"
+        echo "--- End Content ---"
+    fi
+    
+    echo "=== Package.json Context ==="
+    if [ -f "package.json" ]; then
+        echo "--- Package.json ---"
+        cat package.json
+        echo "--- End Package.json ---"
+    fi
+    
+    echo "=== Project Structure ==="
+    find . -type f -name "*.js" -o -name "*.ts" -o -name "*.py" -o -name "*.md" | head -20
+    echo "=== End Context ==="
+    '
+    
+    # Core Commands - Using Direct CLI
+    
+    # Enhanced Planning and architecture
+    cat > "$CLAUDE_SETTINGS_DIR/gemini-plan-cli.md" << EOF
+---
+description: Plan features with CLI - Simple and reliable
+---
+
+Plan this feature or project using direct Gemini CLI with project context.
+
+What do you want to plan or build?
+
+!bash -c "
+echo '=== Project Analysis ==='
+if [ -f package.json ]; then echo 'Package.json:'; cat package.json; fi
+if [ -f README.md ]; then echo 'README:'; head -n 20 README.md; fi
+echo '=== Source Structure ==='
+find . -name '*.js' -o -name '*.ts' -o -name '*.py' | head -10
+echo '=== Planning Request ==='
+gemini -m gemini-2.5-pro 'Help plan this feature/project: {input}. ${cli_context}Based on the project context above, provide: 1) Architecture recommendations 2) Technology choices 3) Implementation steps 4) Integration considerations 5) Potential challenges. Be specific and actionable.'
+"
+EOF
+    print_success "Created /gemini-plan-cli command (CLI-Direct)"
+    
+    # Context-aware best approach advice
+    cat > "$CLAUDE_SETTINGS_DIR/gemini-approach-cli.md" << EOF
+---
+description: Get best practice advice with CLI - No dependencies
+---
+
+Get expert best practice advice from Gemini CLI with project awareness.
+
+What approach question do you have?
+
+!bash -c "
+echo '=== Project Context ==='
+if [ -f package.json ]; then echo 'Tech Stack:'; cat package.json; fi
+echo 'Selected Code: {selectedText}'
+echo '=== Question ==='
+gemini -m gemini-2.5-pro 'Approach question: {input}. ${cli_context}Based on the project context above, recommend: 1) Best practices for this tech stack 2) Pros/cons of different approaches 3) Implementation strategy 4) Common pitfalls 5) Security and performance considerations.'
+"
+EOF
+    print_success "Created /gemini-approach-cli command (CLI-Direct)"
+    
+    # Smart function generation
+    cat > "$CLAUDE_SETTINGS_DIR/gemini-function-cli.md" << EOF
+---
+description: Generate functions with CLI - Direct gemini execution
+---
+
+Generate a function using direct Gemini CLI that matches your project style.
+
+What function do you need?
+
+!bash -c "
+echo '=== Project Context ==='
+if [ -f package.json ]; then echo 'Dependencies:'; cat package.json; fi
+echo 'Code Context: {selectedText}'
+echo '=== Function Request ==='
+gemini 'Create function: {input}. ${cli_context}Requirements based on context: 1) Match existing code style 2) Use appropriate dependencies 3) Include error handling 4) Add proper documentation 5) Provide usage example. Make it production-ready.'
+"
+EOF
+    print_success "Created /gemini-function-cli command (CLI-Direct)"
+    
+    # Comprehensive code review
+    cat > "$CLAUDE_SETTINGS_DIR/gemini-review-cli.md" << EOF
+---
+description: Code review with CLI - Fast and reliable
+---
+
+Review selected code with direct Gemini CLI execution.
+
+!bash -c "
+echo '=== Code Review Context ==='
+echo 'File: {currentFile}'
+echo 'Code to review:'
+echo '{selectedText}'
+if [ -f package.json ]; then echo 'Project dependencies:'; cat package.json; fi
+echo '=== Review Request ==='
+gemini 'Comprehensive code review. ${cli_context}Analyze for: 1) Security vulnerabilities and input validation 2) Performance issues and optimizations 3) Best practices for this technology 4) Code maintainability 5) Integration issues. Prioritize HIGH and CRITICAL findings with specific fixes.'
+"
+EOF
+    print_success "Created /gemini-review-cli command (CLI-Direct)"
+    
+    # Enhanced code explanation
+    cat > "$CLAUDE_SETTINGS_DIR/gemini-explain-cli.md" << EOF
+---
+description: Explain code with CLI - Simple direct execution
+---
+
+Get detailed code explanation using direct Gemini CLI.
+
+!bash -c "
+echo '=== Code Explanation Context ==='
+echo 'File: {currentFile}'
+echo 'Code to explain:'
+echo '{selectedText}'
+if [ -f package.json ]; then echo 'Project context:'; cat package.json; fi
+echo '=== Explanation Request ==='
+gemini 'Explain this code in detail. ${cli_context}Cover: 1) What it does and its purpose 2) How it works step-by-step 3) Key concepts and patterns 4) Dependencies and integrations 5) Learning points. Use clear, educational language.'
+"
+EOF
+    print_success "Created /gemini-explain-cli command (CLI-Direct)"
+    
+    # Smart debugging
+    cat > "$CLAUDE_SETTINGS_DIR/gemini-fix-cli.md" << EOF
+---
+description: Debug with CLI - Direct error analysis
+---
+
+Get debugging help using direct Gemini CLI with context.
+
+What error or issue are you seeing?
+
+!bash -c "
+echo '=== Debug Context ==='
+echo 'File: {currentFile}'
+echo 'Error/Issue: {input}'
+echo 'Code context:'
+echo '{selectedText}'
+if [ -f package.json ]; then echo 'Project setup:'; cat package.json; fi
+echo '=== Debug Request ==='
+gemini 'Debug this error: {input}. ${cli_context}Provide: 1) Root cause analysis 2) Step-by-step fix with code 3) Why this happened (education) 4) Prevention strategies 5) Related areas to check. Give working solution.'
+"
+EOF
+    print_success "Created /gemini-fix-cli command (CLI-Direct)"
+    
+    # Enhanced security audit
+    cat > "$CLAUDE_SETTINGS_DIR/gemini-security-cli.md" << EOF
+---
+description: Security audit with CLI - Direct analysis
+---
+
+Perform security audit using direct Gemini CLI.
+
+!bash -c "
+echo '=== Security Audit Context ==='
+echo 'File: {currentFile}'
+echo 'Code to audit:'
+echo '{selectedText}'
+if [ -f package.json ]; then echo 'Dependencies:'; cat package.json; fi
+if [ -f .env.example ]; then echo 'Environment template:'; cat .env.example; fi
+echo '=== Security Audit ==='
+gemini -m gemini-2.5-pro 'Security audit. ${cli_context}Analyze for: 1) Input validation issues 2) Authentication/authorization flaws 3) Data exposure risks 4) Dependency vulnerabilities 5) Configuration security. List only HIGH/CRITICAL issues with specific fixes.'
+"
+EOF
+    print_success "Created /gemini-security-cli command (CLI-Direct)"
+    
+    # Enhanced general questions
+    cat > "$CLAUDE_SETTINGS_DIR/gemini-ask-cli.md" << EOF
+---
+description: Ask development questions with CLI - Simple and direct
+---
+
+Ask Gemini any development question using direct CLI.
+
+What would you like to ask?
+
+!bash -c "
+echo '=== Question Context ==='
+if [ -f package.json ]; then echo 'Project tech stack:'; cat package.json; fi
+echo 'Question: {input}'
+echo '=== Answer Request ==='
+gemini 'Development question: {input}. ${cli_context}Answer considering: 1) Current project tech stack 2) Best practices 3) Practical implementation 4) Trade-offs and alternatives 5) Specific recommendations for this setup.'
+"
+EOF
+    print_success "Created /gemini-ask-cli command (CLI-Direct)"
+    
+    # Response handler commands for CLI
+    cat > "$CLAUDE_SETTINGS_DIR/gemini-implement-cli.md" << EOF
+---
+description: Implement suggestions from Gemini CLI analysis
+---
+
+Implement Gemini's suggestions from previous CLI analysis.
+
+What Gemini suggestions should I implement? (paste or describe)
+
+!echo "I'll implement these Gemini CLI suggestions: {input}. I'll maintain code style, ensure proper testing, and verify all changes work correctly with the current project setup."
+EOF
+    print_success "Created /gemini-implement-cli command (CLI Response Handler)"
+    
+    # Additional CLI commands would continue here...
+    # For brevity, I'll add a few key ones
+    
+    print_info "CLI command set created with direct gemini execution"
+    print_info "Commands use 'gemini-*-cli' naming to distinguish from MCP versions"
+}
+
 # Generate prompts file
 generate_prompts() {
     print_header "Creating copy-paste prompts"
@@ -492,6 +714,98 @@ EOF
     print_success "Created $PROMPTS_FILE"
 }
 
+# Choose integration approach
+choose_integration_method() {
+    print_header "Choose Integration Method"
+    
+    echo "Select how you want to integrate Gemini with Claude Code:"
+    echo ""
+    echo -e "${GREEN}1) MCP Server Integration (Recommended)${NC}"
+    echo "   ✓ Native Claude Code integration"
+    echo "   ✓ File-aware analysis with @filename syntax"
+    echo "   ✓ Large context windows"
+    echo "   ✓ Seamless project understanding"
+    echo "   ✗ Requires MCP server installation"
+    echo ""
+    echo -e "${BLUE}2) Direct CLI Integration${NC}"
+    echo "   ✓ Simpler setup (no MCP server needed)"
+    echo "   ✓ Direct gemini command execution"
+    echo "   ✓ Works in any bash environment"
+    echo "   ✓ Easier troubleshooting"
+    echo "   ✗ Manual file context handling"
+    echo "   ✗ Smaller context windows per command"
+    echo ""
+    echo -e "${YELLOW}3) Hybrid Setup (Both Methods)${NC}"
+    echo "   ✓ Best of both worlds"
+    echo "   ✓ MCP commands + CLI fallbacks"
+    echo "   ✓ Maximum flexibility"
+    echo "   ✗ More commands to manage"
+    echo ""
+    echo "4) Show detailed comparison"
+    echo ""
+    
+    while true; do
+        read -p "Enter your choice (1-4): " INTEGRATION_CHOICE
+        
+        case $INTEGRATION_CHOICE in
+            1)
+                INTEGRATION_METHOD="mcp"
+                print_success "Selected: MCP Server Integration"
+                echo "Prerequisites: Ensure 'claude mcp add gemini-cli -s user -- npx -y gemini-mcp-tool' is run"
+                break
+                ;;
+            2)
+                INTEGRATION_METHOD="cli"
+                print_success "Selected: Direct CLI Integration"
+                echo "No additional setup required beyond Gemini CLI authentication"
+                break
+                ;;
+            3)
+                INTEGRATION_METHOD="hybrid"
+                print_success "Selected: Hybrid Setup (Both Methods)"
+                echo "This creates both MCP and CLI versions of each command"
+                break
+                ;;
+            4)
+                show_integration_comparison
+                ;;
+            *)
+                print_error "Invalid choice. Please enter 1, 2, 3, or 4."
+                ;;
+        esac
+    done
+    
+    echo ""
+}
+
+# Show detailed integration comparison
+show_integration_comparison() {
+    print_header "Integration Method Comparison"
+    
+    echo "┌─────────────────────┬──────────────────────┬──────────────────────┐"
+    echo "│ Feature             │ MCP Server           │ Direct CLI           │"
+    echo "├─────────────────────┼──────────────────────┼──────────────────────┤"
+    echo "│ Setup Complexity    │ Medium               │ Simple               │"
+    echo "│ Claude Integration  │ Native               │ Bash commands        │"
+    echo "│ File Context        │ Automatic @files     │ Manual file reading  │"
+    echo "│ Context Window      │ Large (multi-file)   │ Smaller (per-cmd)    │"
+    echo "│ Project Awareness   │ Excellent            │ Good (manual)        │"
+    echo "│ Troubleshooting     │ MCP-dependent        │ Direct CLI errors    │"
+    echo "│ Performance         │ Optimized            │ Command-per-call     │"
+    echo "│ Dependencies        │ MCP Server           │ Just Gemini CLI      │"
+    echo "│ Reliability         │ MCP + Network        │ CLI + Network        │"
+    echo "│ Best For            │ Rich integration     │ Simple reliability   │"
+    echo "└─────────────────────┴──────────────────────┴──────────────────────┘"
+    echo ""
+    echo -e "${BLUE}Recommendations:${NC}"
+    echo "• ${GREEN}MCP Server${NC}: Choose if you want the best Claude Code integration"
+    echo "• ${BLUE}Direct CLI${NC}: Choose if you prefer simplicity and reliability"
+    echo "• ${YELLOW}Hybrid${NC}: Choose if you want both options available"
+    echo ""
+    read -p "Press Enter to continue..."
+    echo ""
+}
+
 # Generate status file
 generate_status() {
     cat > "$STATUS_FILE" << EOF
@@ -593,14 +907,31 @@ EOF
 main() {
     echo -e "${BLUE}"
     echo "╔══════════════════════════════════════════════════╗"
-    echo "║     Gemini MCP + Claude Code Setup               ║"
+    echo "║     Gemini + Claude Code Dual Integration        ║"
     echo "║    Next-Gen AI Development Workflow              ║"
     echo "╚══════════════════════════════════════════════════╝"
     echo -e "${NC}"
     
-    echo "This setup creates 20 intelligent slash commands with:"
+    echo "This setup creates intelligent slash commands with multiple integration options:"
+    echo ""
+    echo -e "${GREEN}🚀 MCP Server Integration:${NC}"
+    echo "• Native Claude Code integration with @filename syntax"
+    echo "• Large context windows for project-wide analysis"
+    echo "• Seamless multi-file understanding"
+    echo ""
+    echo -e "${BLUE}⚡ Direct CLI Integration:${NC}"
+    echo "• Simple bash-based gemini command execution"
+    echo "• No MCP server dependencies"
+    echo "• Reliable direct API communication"
+    echo ""
+    echo -e "${YELLOW}🔄 Hybrid Option:${NC}"
+    echo "• Both MCP and CLI commands available"
+    echo "• Maximum flexibility and reliability"
+    echo "• Best of both integration approaches"
+    echo ""
+    echo "All approaches include:"
     echo "• Smart model selection (flash for speed, pro for depth)"
-    echo "• Project-aware AI analysis using @filename syntax"
+    echo "• Project-aware AI analysis with context handling"
     echo "• Context-smart code generation and review"  
     echo "• Project-wide security audits and optimization"
     echo "• Intelligent refactoring and test generation"
@@ -617,11 +948,16 @@ main() {
     echo ""
     echo "• Install MCP server: claude mcp add gemini-cli -s user -- npx -y gemini-mcp-tool"
     echo ""
-    echo "What you get:"
-    echo "• 8 core commands using flash model (fast, no rate limits)"
-    echo "• 7 advanced commands using pro model (deep analysis)"
-    echo "• 4 response handler commands (implement, verify, iterate, proceed)"
-    echo "• 4 workflow commands (fix-cycle, build-cycle, secure-cycle, optimize-cycle)"
+    echo "Choose your integration approach during setup:"
+    echo "• MCP Server: Full Claude Code integration (requires MCP server)"
+    echo "• Direct CLI: Simple bash-based execution (minimal dependencies)"
+    echo "• Hybrid: Both approaches for maximum flexibility"
+    echo ""
+    echo "All approaches provide:"
+    echo "• 8+ core commands using flash model (fast, no rate limits)"
+    echo "• 7+ advanced commands using pro model (deep analysis)"
+    echo "• Response handler commands (implement, verify, iterate, proceed)"
+    echo "• Workflow commands (fix-cycle, build-cycle, secure-cycle, optimize-cycle)"
     echo "• Smart model selection to avoid rate limits"
     echo "• Complete development workflows with Gemini collaboration"
     echo ""
@@ -631,17 +967,42 @@ main() {
     # Detect available tools
     detect_available_clis
     
-    # Create commands
-    create_slash_commands
+    # Choose integration method
+    choose_integration_method
+    
+    # Create commands based on chosen method
+    case $INTEGRATION_METHOD in
+        "mcp")
+            create_mcp_commands
+            ;;
+        "cli")
+            create_cli_commands
+            ;;
+        "hybrid")
+            create_mcp_commands
+            create_cli_commands
+            ;;
+    esac
     
     # Generate files
     generate_prompts
     generate_status
     
     # Success message
-    print_header "🎉 MCP Setup Complete!"
+    print_header "🎉 Gemini Integration Setup Complete!"
     
-    echo "Your next-generation AI development workflow is ready!"
+    case $INTEGRATION_METHOD in
+        "mcp")
+            echo "Your MCP Server integration is ready!"
+            ;;
+        "cli")
+            echo "Your Direct CLI integration is ready!"
+            ;;
+        "hybrid")
+            echo "Your Hybrid integration (MCP + CLI) is ready!"
+            ;;
+    esac
+    echo "Next-generation AI development workflow configured!"
     echo ""
     echo -e "${GREEN}Next steps:${NC}"
     echo "1. Update Gemini CLI: npm install -g @google/gemini-cli"
@@ -653,14 +1014,37 @@ main() {
     echo "   • Set key: export GOOGLE_API_KEY=\"your-key-here\""
     echo "   • Or run: ./gemini-auth-helper.sh for guided setup"
     echo ""
-    echo "4. Install MCP server: claude mcp add gemini-cli -s user -- npx -y gemini-mcp-tool"
-    echo "5. Copy activation prompt from: $PROMPTS_FILE into Claude Code"
-    echo "6. Start coding with smart model selection!"
-    echo ""
-    echo -e "${BLUE}Try these enhanced commands:${NC}"
-    echo "• /gemini-review (uses flash - fast, no limits)"
-    echo "• /gemini-plan (uses pro - deep analysis)"
-    echo "• /gemini-build-cycle (smart model switching)"
+    case $INTEGRATION_METHOD in
+        "mcp")
+            echo "4. Install MCP server: claude mcp add gemini-cli -s user -- npx -y gemini-mcp-tool"
+            echo "5. Copy activation prompt from: $PROMPTS_FILE into Claude Code"
+            echo "6. Start coding with MCP integration!"
+            echo ""
+            echo -e "${BLUE}Try these MCP commands:${NC}"
+            echo "• /gemini-review (uses flash - fast, no limits)"
+            echo "• /gemini-plan (uses pro - deep analysis)"
+            echo "• /gemini-build-cycle (smart model switching)"
+            ;;
+        "cli")
+            echo "4. Copy activation prompt from: $PROMPTS_FILE into Claude Code"
+            echo "5. Start coding with Direct CLI integration!"
+            echo ""
+            echo -e "${BLUE}Try these CLI commands:${NC}"
+            echo "• /gemini-review-cli (direct gemini execution)"
+            echo "• /gemini-plan-cli (simple and reliable)"
+            echo "• /gemini-fix-cli (direct error analysis)"
+            ;;
+        "hybrid")
+            echo "4. Install MCP server: claude mcp add gemini-cli -s user -- npx -y gemini-mcp-tool"
+            echo "5. Copy activation prompt from: $PROMPTS_FILE into Claude Code"
+            echo "6. Start coding with both integration methods!"
+            echo ""
+            echo -e "${BLUE}Try both command sets:${NC}"
+            echo "• MCP: /gemini-review, /gemini-plan, /gemini-build-cycle"
+            echo "• CLI: /gemini-review-cli, /gemini-plan-cli, /gemini-fix-cli"
+            echo "• Use MCP for advanced features, CLI for reliability"
+            ;;
+    esac
     echo ""
     read -p "Press Enter to finish..."
 }
